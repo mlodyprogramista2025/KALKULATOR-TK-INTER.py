@@ -1,2 +1,56 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+import tkinter as tk  # Wczytujemy tkintera
+
+# Co się dzieje po kliknięciu przycisku
+def klik(znak):
+    pole.insert(tk.END, znak)  # dodaje znak na koniec
+
+# Czyści pole
+def wyczysc():
+    pole.delete(0, tk.END)
+
+# Oblicza wynik
+def oblicz():
+    dzialanie = pole.get()  # pobiera tekst z pola
+    try:
+        wynik = eval(dzialanie)  # liczy działanie
+        pole.delete(0, tk.END)
+        pole.insert(0, str(wynik))  # pokazuje wynik
+    except:
+        pole.delete(0, tk.END)
+        pole.insert(0, "Błąd")  # w razie błędu
+
+# Tworzymy okno
+okno = tk.Tk()
+okno.title("Prosty kalkulator")
+okno.geometry("300x400")
+
+# Pole tekstowe (zamiast .pack() używamy .grid)
+pole = tk.Entry(okno, width=20, font=("Arial", 20))
+pole.grid(row=0, column=0, columnspan=4, padx=10, pady=10)
+
+# Lista przycisków
+przyciski = [
+    "7", "8", "9", "+",
+    "4", "5", "6", "-",
+    "1", "2", "3", "*",
+    "0", ".", "/", "="
+]
+
+# Tworzymy przyciski w pętli
+for i in range(len(przyciski)):
+    b = tk.Button(okno, text=przyciski[i], width=5, height=2, font=("Arial", 18))
+
+    if przyciski[i] == "=":
+        b.config(command=oblicz)
+    else:
+        b.config(command=lambda z=przyciski[i]: klik(z))
+
+    b.grid(row=1 + i // 4, column=i % 4, padx=2, pady=2)
+
+# Przycisk "C" – czyść
+czysc = tk.Button(okno, text="C", width=22, height=2, font=("Arial", 18), command=wyczysc)
+czysc.grid(row=5, column=0, columnspan=4, padx=10, pady=10)
+
+# Start aplikacji
+okno.mainloop()
+
